@@ -1,0 +1,29 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE / editor
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+
+# Git & CI
+.git/
+.gitignore
+.gitattributes
+
+# Env & secrets
+.env
+*.env
+
+# Docs / misc
+HELP.md
+README.md
+
+# Nested duplicate project folder
+todoList/
