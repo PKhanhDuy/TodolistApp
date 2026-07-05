@@ -1,21 +1,49 @@
 import { useState } from 'react'
+import type { Todo } from './types'
+import TodoInput from './components/TodoInput'
+import TodoList from './components/TodoList'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState<Todo[]>([])
+
+  const addTodo = (title: string) => {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      title,
+      completed: false,
+      createdAt: Date.now(),
+    }
+    setTodos((prev) => [newTodo, ...prev])
+  }
+
+  const toggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    )
+  }
+
+  const deleteTodo = (id: string) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id))
+  }
+
+  const remaining = todos.filter((todo) => !todo.completed).length
 
   return (
     <main className="app">
-      <div className="card">
-        <h1>React + TypeScript + Docker</h1>
-        <p>Khung dự án cơ bản đã sẵn sàng.</p>
-        <button onClick={() => setCount((c) => c + 1)}>
-          Đã bấm {count} lần
-        </button>
-        <p className="hint">
-          Chỉnh sửa <code>src/App.tsx</code> và lưu để thử hot reload.
-        </p>
-      </div>
+      <section className="todo-card">
+        <header className="todo-header">
+          <h1>Danh sách công việc</h1>
+          <p className="todo-subtitle">
+            Còn lại {remaining} / {todos.length} việc cần làm
+          </p>
+        </header>
+
+        <TodoInput onAdd={addTodo} />
+        <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+      </section>
     </main>
   )
 }
