@@ -2,6 +2,8 @@
 
 Ứng dụng TodoList gồm **frontend** (React + TypeScript + Vite) và **backend** (Spring Boot + JPA).
 
+# Link trang web: https://todolist-app-xi-pied.vercel.app
+
 ## Cấu trúc dự án
 
 ```
