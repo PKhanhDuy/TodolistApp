@@ -1,5 +1,5 @@
 import type { SortOption, StatusFilter } from '../types'
-import { SORT_OPTIONS } from '../types'
+import SortSelect from './SortSelect'
 
 interface TodoToolbarProps {
   search: string
@@ -46,20 +46,10 @@ function TodoToolbar({
           </button>
         ))}
       </div>
-      <label className="todo-sort">
+      <div className="todo-sort">
         <span>Sắp xếp</span>
-        <select
-          value={sort}
-          onChange={(e) => onSortChange(e.target.value as SortOption)}
-          aria-label="Sắp xếp công việc"
-        >
-          {SORT_OPTIONS.map(({ value, label }) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <SortSelect value={sort} onChange={onSortChange} />
+      </div>
     </div>
   )
 }
