@@ -3,57 +3,249 @@
   align-items: flex-start;
   justify-content: center;
   min-height: 100vh;
-  padding: 3rem 1rem;
+  padding: 4rem 1rem;
 }
 
 .todo-card {
   width: 100%;
-  max-width: 520px;
-  padding: 2rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  max-width: 540px;
+  padding: 2.25rem;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: card-in 0.5s ease both;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.todo-header {
+  margin-bottom: 1.75rem;
 }
 
 .todo-header h1 {
   margin: 0;
-  font-size: 1.6rem;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #c7d2fe, #a5b4fc 40%, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .todo-subtitle {
-  margin: 0.25rem 0 1.5rem;
+  margin: 0.4rem 0 0;
   font-size: 0.9rem;
-  opacity: 0.7;
+  color: var(--text-muted);
+}
+
+/* Thanh tiến độ */
+.todo-progress {
+  height: 8px;
+  margin-top: 1rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.todo-progress__bar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.4s ease;
 }
 
 /* Ô nhập công việc */
 .todo-input {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin-bottom: 1.5rem;
 }
 
 .todo-input input {
   flex: 1;
-  padding: 0.65em 0.9em;
+  padding: 0.8em 1em;
   font-size: 1em;
-  font-family: inherit;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.todo-input input::placeholder {
+  color: var(--text-muted);
 }
 
 .todo-input input:focus {
-  border-color: #646cff;
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .todo-input button {
-  background-color: #646cff;
-  border-color: transparent;
+  padding: 0.8em 1.4em;
+  font-size: 0.95em;
+  font-weight: 600;
   color: #fff;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s;
+}
+
+.todo-input button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(99, 102, 241, 0.45);
+}
+
+.todo-input button:active {
+  transform: translateY(0);
+}
+
+/* Tìm kiếm & lọc */
+.todo-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.todo-search {
+  width: 100%;
+  padding: 0.75em 1em;
+  font-size: 0.95em;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.todo-search::placeholder {
+  color: var(--text-muted);
+}
+
+.todo-search:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.todo-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.todo-filter {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.todo-filter:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.todo-filter.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+/* Phân trang */
+.todo-pagination {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.todo-pagination__info {
+  margin: 0 0 0.75rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.todo-pagination__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.todo-pagination__btn {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.todo-pagination__btn:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.todo-pagination__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.todo-pagination__pages {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.todo-pagination__page {
+  min-width: 34px;
+  height: 34px;
+  padding: 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.todo-pagination__page:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+.todo-pagination__page.is-active {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
 }
 
 /* Danh sách */
@@ -63,7 +255,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
 
 .todo-item {
@@ -71,47 +263,357 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  animation: item-in 0.3s ease both;
+}
+
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.todo-item:hover {
+  background: var(--surface-hover);
+  border-color: var(--border);
 }
 
 .todo-item__label {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
   cursor: pointer;
   flex: 1;
+  min-width: 0;
+}
+
+/* Checkbox tuỳ chỉnh */
+.todo-item__label input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  border: 2px solid rgba(148, 163, 184, 0.6);
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.todo-item__label input[type='checkbox']:hover {
+  border-color: var(--accent);
+}
+
+.todo-item__label input[type='checkbox']:checked {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.todo-item__label input[type='checkbox']:checked::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 3px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .todo-item__title {
   word-break: break-word;
+  transition: color 0.2s, opacity 0.2s;
 }
 
 .todo-item.is-completed .todo-item__title {
   text-decoration: line-through;
-  opacity: 0.5;
+  color: var(--text-muted);
+  opacity: 0.65;
+}
+
+.todo-item__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.todo-item:hover .todo-item__actions {
+  opacity: 1;
+}
+
+.todo-item__edit-btn,
+.todo-item__delete {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
 }
 
 .todo-item__delete {
-  background: transparent;
-  border: none;
-  color: inherit;
   font-size: 1.4rem;
-  line-height: 1;
-  padding: 0 0.4rem;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s, color 0.2s;
+}
+
+.todo-item__edit-btn:hover {
+  color: var(--accent);
+  background: var(--accent-soft);
 }
 
 .todo-item__delete:hover {
-  opacity: 1;
-  color: #ff6b6b;
+  color: var(--danger);
+  background: rgba(244, 63, 94, 0.12);
 }
 
+.todo-item__edit-form {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.todo-item__edit-form input {
+  width: 100%;
+  padding: 0.65em 0.85em;
+  font-size: 0.95em;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  outline: none;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.todo-item__edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-save,
+.btn-cancel {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.btn-save {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  color: var(--text-muted);
+  background: transparent;
+  border-color: var(--border);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+
+/* Trạng thái rỗng / tải */
 .todo-empty {
   text-align: center;
+  color: var(--text-muted);
+  padding: 2rem 0;
+}
+
+/* Thông báo lỗi */
+.todo-error {
+  margin: 0 0 1rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 12px;
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.35);
+  color: #fda4af;
+  font-size: 0.9rem;
+}
+
+/* Thanh trên cùng (user + đăng xuất) */
+.todo-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.todo-user {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.todo-user strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.btn-ghost {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* Thẻ đăng nhập / đăng ký */
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem 2.25rem;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: card-in 0.5s ease both;
+}
+
+.auth-header {
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+
+.auth-header h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #c7d2fe, #a5b4fc 40%, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-subtitle {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.auth-field span {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.auth-field input {
+  padding: 0.8em 1em;
+  font-size: 1em;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.auth-field input::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+.auth-field input:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.auth-submit {
+  margin-top: 0.5rem;
+  padding: 0.85em 1.4em;
+  font-size: 0.98em;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s;
+}
+
+.auth-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(99, 102, 241, 0.45);
+}
+
+.auth-submit:disabled {
   opacity: 0.6;
-  padding: 1.5rem 0;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  margin: 1.5rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: #a5b4fc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .todo-card {
+    padding: 1.5rem;
+  }
+
+  .todo-item__actions {
+    opacity: 1;
+  }
 }

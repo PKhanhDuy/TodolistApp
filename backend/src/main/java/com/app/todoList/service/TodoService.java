@@ -1,30 +1,59 @@
 package com.app.todoList.service;
 
 import com.app.todoList.dto.CreateTodoRequest;
+import com.app.todoList.dto.PaginatedTodoResponse;
 import com.app.todoList.dto.TodoResponse;
+import com.app.todoList.dto.TodoStatsResponse;
 import com.app.todoList.dto.UpdateTodoRequest;
 import com.app.todoList.entity.Todo;
+import com.app.todoList.entity.User;
 import com.app.todoList.exception.ResourceNotFoundException;
 import com.app.todoList.repository.TodoRepository;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TodoService {
 
-    private final TodoRepository todoRepository;
+    public static final int DEFAULT_PAGE_SIZE = 7;
 
-    public TodoService(TodoRepository todoRepository) {
+    private final TodoRepository todoRepository;
+    private final CurrentUserService currentUserService;
+
+    public TodoService(TodoRepository todoRepository, CurrentUserService currentUserService) {
         this.todoRepository = todoRepository;
+        this.currentUserService = currentUserService;
     }
 
     @Transactional(readOnly = true)
-    public List<TodoResponse> findAll() {
-        return todoRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .map(TodoResponse::from)
-                .toList();
+    public PaginatedTodoResponse findAll(String search, Boolean completed, int page, int size) {
+        User user = currentUserService.getCurrentUser();
+        String searchPattern = (search == null || search.isBlank()) ? null : "%" + search.trim() + "%";
+        int safePage = Math.max(page, 0);
+        int safeSize = size > 0 ? size : DEFAULT_PAGE_SIZE;
+
+        Page<Todo> result = todoRepository.findByUserWithFilters(
+                user,
+                searchPattern,
+                completed,
+                PageRequest.of(safePage, safeSize));
+
+        return new PaginatedTodoResponse(
+                result.getContent().stream().map(TodoResponse::from).toList(),
+                result.getNumber(),
+                result.getSize(),
+                result.getTotalElements(),
+                result.getTotalPages());
+    }
+
+    @Transactional(readOnly = true)
+    public TodoStatsResponse getStats() {
+        User user = currentUserService.getCurrentUser();
+        long total = todoRepository.countByUser(user);
+        long completed = todoRepository.countByUserAndCompleted(user, true);
+        return new TodoStatsResponse(total, completed);
     }
 
     @Transactional(readOnly = true)
@@ -34,9 +63,11 @@ public class TodoService {
 
     @Transactional
     public TodoResponse create(CreateTodoRequest request) {
+        User user = currentUserService.getCurrentUser();
         Todo todo = Todo.builder()
                 .title(request.title())
                 .completed(Boolean.TRUE.equals(request.completed()))
+                .user(user)
                 .build();
         return TodoResponse.from(todoRepository.save(todo));
     }
@@ -63,7 +94,8 @@ public class TodoService {
     }
 
     private Todo getTodoOrThrow(Long id) {
-        return todoRepository.findById(id)
+        User user = currentUserService.getCurrentUser();
+        return todoRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Không tìm thấy việc cần làm với id = " + id));
     }

@@ -3,13 +3,21 @@ import TodoItem from './TodoItem'
 
 interface TodoListProps {
   todos: Todo[]
-  onToggle: (id: string) => void
-  onDelete: (id: string) => void
+  hasFilters: boolean
+  onToggle: (id: number) => void
+  onUpdate: (id: number, title: string, completed: boolean) => Promise<void>
+  onDelete: (id: number) => void
 }
 
-function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+function TodoList({ todos, hasFilters, onToggle, onUpdate, onDelete }: TodoListProps) {
   if (todos.length === 0) {
-    return <p className="todo-empty">Chưa có công việc nào. Hãy thêm việc đầu tiên!</p>
+    return (
+      <p className="todo-empty">
+        {hasFilters
+          ? 'Không tìm thấy công việc phù hợp.'
+          : 'Chưa có công việc nào. Hãy thêm việc đầu tiên!'}
+      </p>
+    )
   }
 
   return (
@@ -19,6 +27,7 @@ function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
           key={todo.id}
           todo={todo}
           onToggle={onToggle}
+          onUpdate={onUpdate}
           onDelete={onDelete}
         />
       ))}
