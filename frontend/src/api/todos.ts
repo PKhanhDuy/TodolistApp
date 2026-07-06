@@ -1,5 +1,5 @@
-import type { PaginatedTodos, StatusFilter, Todo, TodoStats } from '../types'
-import { PAGE_SIZE } from '../types'
+import type { PaginatedTodos, SortOption, StatusFilter, Todo, TodoStats } from '../types'
+import { PAGE_SIZE, parseSortOption } from '../types'
 import { apiFetch } from './http'
 
 function statusToParam(status: StatusFilter): boolean | undefined {
@@ -12,6 +12,7 @@ export function fetchTodos(
   search = '',
   status: StatusFilter = 'all',
   page = 0,
+  sort: SortOption = 'createdAt-desc',
 ): Promise<PaginatedTodos> {
   const params = new URLSearchParams()
   const trimmed = search.trim()
@@ -20,6 +21,10 @@ export function fetchTodos(
   if (completed !== undefined) params.set('completed', String(completed))
   params.set('page', String(page))
   params.set('size', String(PAGE_SIZE))
+
+  const { sortBy, sortDir } = parseSortOption(sort)
+  params.set('sortBy', sortBy)
+  params.set('sortDir', sortDir)
 
   return apiFetch<PaginatedTodos>(`/todos?${params.toString()}`)
 }

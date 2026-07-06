@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import type { StatusFilter, Todo } from '../types'
+import type { SortOption, StatusFilter, Todo } from '../types'
 import TodoInput from '../components/TodoInput'
 import TodoList from '../components/TodoList'
 import TodoPagination from '../components/TodoPagination'
@@ -17,6 +17,7 @@ function TodoPage() {
   const [completedCount, setCompletedCount] = useState(0)
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState<StatusFilter>('all')
+  const [sort, setSort] = useState<SortOption>('createdAt-desc')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,12 +28,12 @@ function TodoPage() {
   }, [])
 
   const loadTodos = useCallback(async (targetPage: number) => {
-    const result = await todosApi.fetchTodos(search, status, targetPage)
+    const result = await todosApi.fetchTodos(search, status, targetPage, sort)
     setTodos(result.content)
     setPage(result.page)
     setTotalPages(result.totalPages)
     setFilteredTotal(result.totalElements)
-  }, [search, status])
+  }, [search, status, sort])
 
   useEffect(() => {
     loadStats().catch((err: Error) => setError(err.message))
@@ -60,6 +61,11 @@ function TodoPage() {
 
   const handleStatusChange = (value: StatusFilter) => {
     setStatus(value)
+    setPage(0)
+  }
+
+  const handleSortChange = (value: SortOption) => {
+    setSort(value)
     setPage(0)
   }
 
@@ -153,8 +159,10 @@ function TodoPage() {
         <TodoToolbar
           search={search}
           status={status}
+          sort={sort}
           onSearchChange={handleSearchChange}
           onStatusChange={handleStatusChange}
+          onSortChange={handleSortChange}
         />
 
         {error && <p className="todo-error">{error}</p>}

@@ -1,10 +1,13 @@
-import type { StatusFilter } from '../types'
+import type { SortOption, StatusFilter } from '../types'
+import { SORT_OPTIONS } from '../types'
 
 interface TodoToolbarProps {
   search: string
   status: StatusFilter
+  sort: SortOption
   onSearchChange: (value: string) => void
   onStatusChange: (status: StatusFilter) => void
+  onSortChange: (sort: SortOption) => void
 }
 
 const FILTERS: { value: StatusFilter; label: string }[] = [
@@ -16,8 +19,10 @@ const FILTERS: { value: StatusFilter; label: string }[] = [
 function TodoToolbar({
   search,
   status,
+  sort,
   onSearchChange,
   onStatusChange,
+  onSortChange,
 }: TodoToolbarProps) {
   return (
     <div className="todo-toolbar">
@@ -41,6 +46,20 @@ function TodoToolbar({
           </button>
         ))}
       </div>
+      <label className="todo-sort">
+        <span>Sắp xếp</span>
+        <select
+          value={sort}
+          onChange={(e) => onSortChange(e.target.value as SortOption)}
+          aria-label="Sắp xếp công việc"
+        >
+          {SORT_OPTIONS.map(({ value, label }) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+      </label>
     </div>
   )
 }

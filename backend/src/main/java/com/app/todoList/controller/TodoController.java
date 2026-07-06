@@ -37,8 +37,10 @@ public class TodoController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) Boolean completed,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "7") int size) {
-        return todoService.findAll(search, completed, page, size);
+            @RequestParam(defaultValue = "7") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        return todoService.findAll(search, completed, page, size, sortBy, sortDir);
     }
 
     @GetMapping("/stats")

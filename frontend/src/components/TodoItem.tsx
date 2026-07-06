@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent, type KeyboardEvent } from 'react'
 import type { Todo } from '../types'
+import { formatCreatedAt } from '../utils/formatDate'
 
 interface TodoItemProps {
   todo: Todo
@@ -85,7 +86,10 @@ function TodoItem({ todo, onToggle, onUpdate, onDelete }: TodoItemProps) {
               checked={todo.completed}
               onChange={() => onToggle(todo.id)}
             />
-            <span className="todo-item__title">{todo.title}</span>
+            <span className="todo-item__content">
+              <span className="todo-item__title">{todo.title}</span>
+              <span className="todo-item__created">{formatCreatedAt(todo.createdAt)}</span>
+            </span>
           </label>
           <div className="todo-item__actions">
             <button

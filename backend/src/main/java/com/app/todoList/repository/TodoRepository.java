@@ -25,7 +25,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
                     WHERE t.user = :user
                     AND (:searchPattern IS NULL OR t.title ILIKE :searchPattern)
                     AND (:completed IS NULL OR t.completed = :completed)
-                    ORDER BY t.createdAt DESC
                     """,
             countQuery = """
                     SELECT COUNT(t) FROM Todo t

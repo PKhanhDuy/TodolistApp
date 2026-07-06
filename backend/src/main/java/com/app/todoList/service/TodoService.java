@@ -11,6 +11,7 @@ import com.app.todoList.exception.ResourceNotFoundException;
 import com.app.todoList.repository.TodoRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,17 +29,19 @@ public class TodoService {
     }
 
     @Transactional(readOnly = true)
-    public PaginatedTodoResponse findAll(String search, Boolean completed, int page, int size) {
+    public PaginatedTodoResponse findAll(
+            String search, Boolean completed, int page, int size, String sortBy, String sortDir) {
         User user = currentUserService.getCurrentUser();
         String searchPattern = (search == null || search.isBlank()) ? null : "%" + search.trim() + "%";
         int safePage = Math.max(page, 0);
         int safeSize = size > 0 ? size : DEFAULT_PAGE_SIZE;
+        Sort sort = resolveSort(sortBy, sortDir);
 
         Page<Todo> result = todoRepository.findByUserWithFilters(
                 user,
                 searchPattern,
                 completed,
-                PageRequest.of(safePage, safeSize));
+                PageRequest.of(safePage, safeSize, sort));
 
         return new PaginatedTodoResponse(
                 result.getContent().stream().map(TodoResponse::from).toList(),
@@ -98,5 +101,16 @@ public class TodoService {
         return todoRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Không tìm thấy việc cần làm với id = " + id));
+    }
+
+    private Sort resolveSort(String sortBy, String sortDir) {
+        boolean ascending = "asc".equalsIgnoreCase(sortDir);
+        String field = sortBy == null ? "createdAt" : sortBy.trim();
+
+        if ("title".equalsIgnoreCase(field)) {
+            return ascending ? Sort.by("title").ascending() : Sort.by("title").descending();
+        }
+
+        return ascending ? Sort.by("createdAt").ascending() : Sort.by("createdAt").descending();
     }
 }
